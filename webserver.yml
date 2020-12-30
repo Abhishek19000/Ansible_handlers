@@ -1,4 +1,6 @@
 - hosts: all
+  vars:
+      - dir: lw
   tasks:
           - name: "Installing APACHE Webserver software"
             package:
@@ -9,7 +11,11 @@
             package:
                   name: "php"
                   state: present
-
+                  
+          - name: " Creating a directory"
+            file:
+                  path: "/var/www/{{ dir }}"
+                  
           - name: "Updating httpd config file"
             template:
                    dest: "/etc/httpd/conf.d/lw.conf"
@@ -23,7 +29,7 @@
          
           - name: "Copying the webpage to the webserver"
             copy:
-                  dest: "/var/www/lw/"
+                  dest: "/var/www/{{ dir }}/"
                   src: "/root/haproxy.php"
   handlers:
           - name: webserver
